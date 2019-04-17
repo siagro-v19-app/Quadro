@@ -1,0 +1,165 @@
+<core:FragmentDefinition
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:t="sap.ui.table"
+	xmlns:f="sap.ui.layout.form">
+	<VBox class="sapuiSmallMargin">
+		<f:SimpleForm id="formPedido"
+			editable="true"
+			layout="ResponsiveGridLayout"
+			title="{view>/titulo}"
+			labelSpanXL="4"
+			labelSpanL="4"
+			labelSpanM="4"
+			labelSpanS="12"
+			adjustLabelSpan="false"
+			emptySpanXL="0"
+			emptySpanL="0"
+			emptySpanM="0"
+			emptySpanS="0"
+			columnsXL="3"
+			columnsL="2"
+			columnsM="2"
+			singleContainerFullSize="false">
+			<f:content>
+				<core:Title/>
+				<Label text="Número" labelFor="numero"/>
+				<Input id="numero" value="{quadro>/Numero}" required="true"/>
+				
+				<Label text="Descrição" labelFor="descricao"/>
+				<Input id="descricao" value="{quadro>/Descricao}" required="true"/>
+				
+				<Label text="Produto" labelFor="produto"/>
+				<Input selectedKey="{
+							path: 'quadro>/Produto',
+							type: 'sap.ui.model.odata.type.Int32'
+						}"
+					required="true"
+					textFormatMode="KeyValue"
+					showSuggestion="true"
+					showValueHelp="true"
+					valueHelpRequest="handleSearchProduto"
+					suggestionItems="{
+						path: '/Produtos'
+					}"
+					id="produto">
+					<suggestionItems>
+						<core:ListItem key="{Id}" text="{Descricao}"/>
+					</suggestionItems>
+				</Input>
+				
+				<Label text="Safra" labelFor="safra"/>
+				<Input selectedKey="{
+							path: 'quadro>/Safra',
+							type: 'sap.ui.model.odata.type.Int32'
+						}"
+					required="true"
+					textFormatMode="KeyValue"
+					showSuggestion="true"
+					showValueHelp="true"
+					valueHelpRequest="handleSearchSafra"
+					suggestionItems="{
+						path: '/Safras'
+					}"
+					id="safra">
+					<suggestionItems>
+						<core:ListItem key="{Id}" text="{Descricao}"/>
+					</suggestionItems>
+				</Input>
+				
+				<core:Title/>
+				<Label text="Unidade de Medida" labelFor="unidade"/>
+				<Input selectedKey="{
+							path: 'quadro>/UnidadeMedida',
+							type: 'sap.ui.model.odata.type.Int32'
+						}"
+					required="true"
+					textFormatMode="KeyValue"
+					showSuggestion="true"
+					showValueHelp="true"
+					valueHelpRequest="handleSearchUnidade"
+					suggestionItems="{
+						path: '/UnidadeMedidas'
+					}"
+					id="unidade">
+					<suggestionItems>
+						<core:ListItem key="{Id}" text="{Descricao}" additionalText="{Sigla}"/>
+					</suggestionItems>
+				</Input>
+				
+				<Label text="Área" labelFor="area"/>
+				<Input id="area" 
+					value="{
+						path: 'quadro>/Area',
+						type: 'sap.ui.model.odata.type.Single',
+						formatOptions: {
+									decimals: 2,
+									decimalSeparator: ','
+								}
+					}"/>
+				
+				<Label text="Encerrado" labelFor="encerrado"/>
+				<CheckBox id="encerrado" selected="{quadro>/Encerrado}"/>
+			</f:content>
+		</f:SimpleForm>
+		<t:Table id="tableQuadroVariedade"
+			rows="{variedade>/}"
+			class="sapUiSizeCondensed"
+			selectionMode="Single"
+			selectionBehavior="Row"
+			enableSelectAll="false"
+			editable="true"
+			visibleRowCountMode="Auto"
+			enableBusyIndicator="true"
+			alternateRowColors="true"
+			enableCustomFilter="false">
+			<t:toolbar>
+				<Toolbar>
+					<Title text="Inserir variedade ao Quadro"/>
+					<ToolbarSpacer/>
+					<Button id="inserir" icon="sap-icon://add" press="onInserirLinha"/>
+					<Button id="remover" icon="sap-icon://delete" press="onRemoverLinha"/>
+				</Toolbar>
+			</t:toolbar>
+			<t:columns>
+				<t:Column>
+					<Label text="Variedade"/>
+					<t:template>
+						<Input selectedKey="{
+								path: 'variedade>Variedade',
+								type: 'sap.ui.model.odata.type.Int32'
+							}"
+							textFormatMode="KeyValue"
+							showSuggestion="true"
+							showValueHelp="true"
+							valueHelpRequest="handleSearchVariedade"
+							suggestionItems="{
+								path: '/Variedades',
+								templateShareable: true
+							}"
+							id="variedade">
+							<suggestionItems>
+								<core:ListItem key="{Id}" text="{Descricao}"/>
+							</suggestionItems>
+						</Input>
+					</t:template>
+				</t:Column>
+				<t:Column>
+					<Label text="Área"/>
+					<t:template>
+						<Input id="areavariedade"
+							value="{
+								path: 'variedade>Area',
+								type: 'sap.ui.model.odata.type.Single',
+								formatOptions: {
+									decimals: 2,
+									decimalSeparator: ','
+								}
+							}"/>
+					</t:template>
+				</t:Column>
+			</t:columns>
+		</t:Table>
+	</VBox>
+</core:FragmentDefinition>

@@ -1,0 +1,76 @@
+<mvc:View controllerName="br.com.idxtecQuadro.controller.QuadroLista"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:mvc="sap.ui.core.mvc"
+	displayBlock="true"
+	xmlns="sap.m"
+	xmlns:t="sap.ui.table">
+	<App id="app">
+		<pages>
+			<Page showHeader="false" class="sapUiContentPadding" enableScrolling="true">
+				<content>
+					<t:Table id="tableQuadro"
+						selectionMode="Single"
+						selectionBehavior="Row"
+						class="sapUiSizeCondensed"
+						visibleRowCountMode="Auto"
+						enableBusyIndicator="true"
+						alternateRowColors="true">
+						<t:toolbar>
+							<Toolbar>
+								<Title text="Lista de Quadros"/>
+								<ToolbarSpacer/>
+								<SearchField placeholder="Pesquisar descrição..." width="30%" search="filtraQuadro"/>
+							</Toolbar>
+						</t:toolbar>
+						<t:Column id="columnEmpresa" filtered="true" width="10%" >
+							<Label text="Empresa" wrapping="true"/>
+							<t:template>
+								<Text text="{Empresa}" wrapping="false"/>
+							</t:template>
+						</t:Column>
+						<t:Column filterProperty="Numero" sortProperty="Numero">
+							<Label text="Número" wrapping="true"/>
+							<t:template>
+								<Text text="{Numero}" wrapping="false"/>
+							</t:template>
+						</t:Column>
+						<t:Column id="columnDescricao" filterProperty="Descricao" sortProperty="Descricao">
+							<Label text="Descrição" wrapping="true"/>
+							<t:template>
+								<Text text="{Descricao}" wrapping="false"/>
+							</t:template>
+						</t:Column>
+						<t:Column filterProperty="ProdutoDetails/Descricao" sortProperty="ProdutoDetails/Descricao">
+							<Label text="Produto" wrapping="true"/>
+							<t:template>
+								<Text text="{ProdutoDetails/Descricao}" wrapping="false"/>
+							</t:template>
+						</t:Column>
+						<t:Column filterProperty="SafraDetails/Descricao" sortProperty="SafraDetails/Descricao">
+							<Label text="Safra" wrapping="true"/>
+							<t:template>
+								<Text text="{SafraDetails/Descricao}" wrapping="false"/>
+							</t:template>
+						</t:Column>
+						<t:Column filterProperty="UnidadeMedidaDetails/Sigla" sortProperty="UnidadeMedidaDetails/Sigla">
+							<Label text="Unidade de Medida" wrapping="true"/>
+							<t:template>
+								<Text text="{UnidadeMedidaDetails/Sigla}" wrapping="false"/>
+							</t:template>
+						</t:Column>
+					</t:Table>
+				</content>
+				<footer>
+					<Toolbar>
+						<ToolbarSpacer/>
+						<Button id="incluir" text="Incluir novo" press="onIncluir" type="Emphasized"/>
+						<Button id="editar" text="Editar" press="onEditar"/>
+						<Button id="remover" text="Remover" press="onRemover"/>
+						<ToolbarSeparator/>
+						<Button icon="sap-icon://refresh" press="onRefresh"/>
+					</Toolbar>
+				</footer>
+			</Page>
+		</pages>
+	</App>
+</mvc:View>
