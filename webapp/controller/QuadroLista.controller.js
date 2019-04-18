@@ -96,6 +96,6 @@ sap.ui.define([
 					oTable.clearSelection();
 				}
 			});
-		},
+		}
 	});
 });

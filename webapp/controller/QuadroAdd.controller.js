@@ -14,7 +14,6 @@ sap.ui.define([
 
 	return Controller.extend("br.com.idxtecQuadro.controller.QuadroAdd", {
 		onInit: function(){
-			var that = this;
 			var oView = this.getView();
 			var oRouter = this.getOwnerComponent().getRouter();
 			oRouter.getRoute( "quadroAdd" ).attachMatched( this._routerMatch , this );
@@ -24,7 +23,6 @@ sap.ui.define([
 			this.showFormFragment( "QuadroCampos" );
 		},
 
-		
 		getModel : function( sModel ) {
 			return this.getOwnerComponent().getModel( sModel );	
 		},
@@ -58,7 +56,6 @@ sap.ui.define([
 	
 			var oQuadroModel = new JSONModel();
 			var oQuadroVariedadeModel = new JSONModel();
-			var oModel = this.getModel();
 			
 			var iEmpresaId = Session.get("EMPRESA_ID");
 			var iUsuarioId = Session.get("USUARIO_ID");
@@ -92,9 +89,7 @@ sap.ui.define([
 			this.getView().byId("unidade").setValue(null);
 		},
 		
-		
 		onInserirLinha: function(oEvent) {
-			var oQuadroModel = this.getView().getModel("quadro");
 			var oQuadroVariedadeModel = this.getView().getModel("variedade");
 			
 			var oItems = oQuadroVariedadeModel.getProperty("/");

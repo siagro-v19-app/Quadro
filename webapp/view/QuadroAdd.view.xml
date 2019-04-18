@@ -5,7 +5,7 @@
 	xmlns:html="http://www.w3.org/1999/xhtml"
 	xmlns:t="sap.ui.table"
 	xmlns:f="sap.ui.layout.form">
-	<Page id="pageQuadroAdd" showHeader="false" class="sapUiContentPadding" enableScrolling="false">
+	<Page id="pageQuadroAdd" showHeader="false" class="sapUiContentPadding" enableScrolling="true">
 		<content>
 		</content>
 		<footer>
