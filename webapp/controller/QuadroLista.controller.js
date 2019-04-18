@@ -62,6 +62,8 @@ sap.ui.define([
 			} else {
 				MessageBox.warning("Selecione um quadro na tabela.");
 			}
+			
+			oTable.clearSelection();
 		},
 		
 		onRemover: function(e){

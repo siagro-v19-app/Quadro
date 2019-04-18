@@ -27,7 +27,6 @@ sap.ui.define([
 				that.showFormFragment( "QuadroCampos" ).then(function (){
 					oView.setBusy( false ); 
 				}); 
-				
 			});
 		},
 		
@@ -75,6 +74,7 @@ sap.ui.define([
 			var sQuadro = oEvent.getParameter("arguments").quadro;
 			var iQuadroId = parseInt(sQuadro, 0);
 			
+			var oCompareModel = new JSONModel();
 			var oQuadroModel = new JSONModel();
 			var oQuadroVariedadeModel = new JSONModel();
 			var oModel = this.getModel();
@@ -98,11 +98,13 @@ sap.ui.define([
 				],
 			
 				success: function(oData) {
+					oCompareModel.setData(oData.results);
 					oQuadroVariedadeModel.setData(oData.results);
 				}
 				
 			})
 			
+			this.getView().setModel(oCompareModel, "compare"); 
 			this.getView().setModel(oQuadroModel, "quadro");
 			this.getView().setModel(oQuadroVariedadeModel, "variedade");
 		},
@@ -132,7 +134,6 @@ sap.ui.define([
 				UsuarioDetails: { __metadata: { uri: sPathUsuarios } }
 	    	});
 			
-			debugger;
 			this.getView().getModel("variedade").setProperty("/", oNovoVariedade);
 		},
 		
@@ -220,7 +221,7 @@ sap.ui.define([
 				var fArea = parseFloat( sArea );
 				
 				oDadosVariedade[i].VariedadeDetails = { __metadata: { uri: sVariedadesPath} };
-				oDadosVariedade[i].Area = fArea ;
+				oDadosVariedade[i].Area = fArea;
 
 				if (iItemId === 0){
 					oModel.create(sPathQuadroVariedades, oDadosVariedade[i], mParameters);
@@ -279,7 +280,24 @@ sap.ui.define([
 		},
 		
 		fechar: function (oEvent) {
-			this.navBack();
+			var that = this;
+			var oCompareModel = this.getView().getModel("compare");
+			var oQuadroVariedadeModel = this.getView().getModel("variedade");
+			
+			var oDadosCompare = oCompareModel.getData();
+			var oDadosVariedade = oQuadroVariedadeModel.getData();
+			
+			if(oDadosCompare.length !== oDadosVariedade.length){
+				sap.m.MessageBox.confirm("Todas as informações serão descartadas, deseja continuar?", {
+					onClose: function(sResposta){
+						if(sResposta === "OK"){
+							that.navBack();
+						}
+					}
+				});
+			} else{
+				this.navBack();
+			}
 		},
 		
 		_verificaCabecalho: function (oView, oDadosQuadro, oDadosVariedade){

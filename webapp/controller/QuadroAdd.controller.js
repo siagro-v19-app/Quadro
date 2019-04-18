@@ -14,16 +14,19 @@ sap.ui.define([
 
 	return Controller.extend("br.com.idxtecQuadro.controller.QuadroAdd", {
 		onInit: function(){
+			var that = this;
+			var oView = this.getView();
 			var oRouter = this.getOwnerComponent().getRouter();
-
-			oRouter.getRoute("quadroAdd").attachMatched(this._routerMatch, this);
-			this.getView().addStyleClass(this.getOwnerComponent().getContentDensityClass());
+			oRouter.getRoute( "quadroAdd" ).attachMatched( this._routerMatch , this );
 			
-			this.showFormFragment("QuadroCampos");
+			oView.addStyleClass( this.getOwnerComponent().getContentDensityClass() );
+				
+			this.showFormFragment( "QuadroCampos" );
 		},
+
 		
-		getModel : function(sModel) {
-			return this.getOwnerComponent().getModel(sModel);	
+		getModel : function( sModel ) {
+			return this.getOwnerComponent().getModel( sModel );	
 		},
 		
 		handleSearchProduto: function(oEvent){
@@ -46,17 +49,23 @@ sap.ui.define([
 			VariedadeHelpDialog.handleValueHelp(this.getView(), sInputId, this);
 		},
 		
-		_routerMatch: function() {
+		_routerMatch: function(oEvent) {
 			var oViewModel = this.getModel("view");
 			
 			oViewModel.setData({
 				titulo: "Inserir Quadro"
 			});
-			
-			var oModel = this.getModel();
 	
 			var oQuadroModel = new JSONModel();
 			var oQuadroVariedadeModel = new JSONModel();
+			var oModel = this.getModel();
+			
+			var iEmpresaId = Session.get("EMPRESA_ID");
+			var iUsuarioId = Session.get("USUARIO_ID");
+			
+			var sPathEmpresas = "/Empresas(" + iEmpresaId + ")";
+			var sPathUsuarios = "/Usuarios(" + iUsuarioId + ")";
+			
 			var oQuadro = {
 				Id: 0,
 				Numero: "",
@@ -66,10 +75,10 @@ sap.ui.define([
 				UnidadeMedida: 0,
 				Area: 0.00,
 				Encerrado: false,
-				Empresa: Session.get("EMPRESA_ID"),
-				Usuario: Session.get("USUARIO_ID"),
-				EmpresaDetails: { __metadata: { uri: "/Empresas(" +  Session.get("EMPRESA_ID") + ")"}},
-				UsuarioDetails: { __metadata: { uri: "/Usuarios(" + Session.get("USUARIO_ID") + ")"}}
+				Empresa: iEmpresaId,
+				Usuario: iUsuarioId,
+				EmpresaDetails: { __metadata: { uri: sPathEmpresas } },
+				UsuarioDetails: { __metadata: { uri: sPathUsuarios } }
 			};
 			
 			oQuadroModel.setData(oQuadro);
@@ -87,34 +96,40 @@ sap.ui.define([
 		onInserirLinha: function(oEvent) {
 			var oQuadroModel = this.getView().getModel("quadro");
 			var oQuadroVariedadeModel = this.getView().getModel("variedade");
+			
 			var oItems = oQuadroVariedadeModel.getProperty("/");
+			
+			var iEmpresaId = Session.get("EMPRESA_ID");
+			var iUsuarioId = Session.get("USUARIO_ID");
+			
+			var sPathEmpresas = "/Empresas(" + iEmpresaId + ")";
+			var sPathUsuarios = "/Usuarios(" + iUsuarioId + ")";
+			
 			var oNovoVariedade = oItems.concat({
 				Id: 0,
 	    		Variedade: 0,
 				Area: 0.00,
 				Quadro: 0,
-				Empresa: Session.get("EMPRESA_ID"),
-				Usuario: Session.get("USUARIO_ID"),
-				EmpresaDetails: { __metadata: { uri: "/Empresas(" +  Session.get("EMPRESA_ID") + ")"}},
-				UsuarioDetails: { __metadata: { uri: "/Usuarios(" + Session.get("USUARIO_ID") + ")"}}
+				Empresa: iEmpresaId,
+				Usuario: iUsuarioId,
+				EmpresaDetails: { __metadata: { uri: sPathEmpresas } },
+				UsuarioDetails: { __metadata: { uri: sPathUsuarios } }
 	    });
 			
 			this.getView().getModel("variedade").setProperty("/", oNovoVariedade);
-			
 		},
 		
 		onRemoverLinha: function(oEvent){
 			var oQuadroVariedadeModel = this.getView().getModel("variedade");
 			
 			var oTable = this.getView().byId("tableQuadroVariedade");
-			//var oTable = sap.ui.getCore().byId("tablePedido");
 			
 			var nIndex = oTable.getSelectedIndex();
 			
 			if (nIndex > -1) {
 				var oItems = oQuadroVariedadeModel.getProperty("/");
 				
-				oItems.splice(nIndex,1);
+				oItems.splice(nIndex, 1);
 				oQuadroVariedadeModel.setProperty("/", oItems);
 				oTable.clearSelection();
 			} else {
@@ -131,30 +146,39 @@ sap.ui.define([
 			
 			var oDadosQuadro = oQuadroModel.getData();
 			var oDadosVariedade = oQuadroVariedadeModel.getData();
-
-			oDadosQuadro.ProdutoDetails = { __metadata: { uri: "/Produtos(" + oDadosQuadro.Produto + ")"}};
-			oDadosQuadro.SafraDetails = { __metadata: { uri: "/Safras(" + oDadosQuadro.Safra + ")"}};
-			oDadosQuadro.UnidadeMedidaDetails = { __metadata: { uri: "/UnidadeMedidas(" + oDadosQuadro.UnidadeMedida + ")"}};
-			oDadosQuadro.QuadroVariedadeDetails = [];
-		
-			for ( var i = 0; i < oDadosVariedade.length; i++) {
-				oDadosVariedade[i].VariedadeDetails = {
-					__metadata: { uri: "/Variedades(" + oDadosVariedade[i].Variedade + ")" } 
-				};
-		
-				soma += oDadosVariedade[i].Area;
-
-				oDadosQuadro.QuadroVariedadeDetails.push(oDadosVariedade[i]);
-			}
 			
 			if(this._verificaCabecalho(this.getView(),oDadosQuadro,oDadosVariedade)){
 				return;
 			}
 			
-			if(this._verificaLinhas(oDadosVariedade, soma, oDadosQuadro)){
+			for (var i = 0; i < oDadosVariedade.length; i++) {
+				soma += oDadosVariedade[i].Area;
+			}
+			
+			if(this._verificaLinhas(oDadosVariedade, soma, oDadosQuadro.Area)){
 				return;
 			}
 			
+			var sPathProdutos = "/Produtos(" + oDadosQuadro.Produto + ")";
+			var sPathSafras = "/Safras(" + oDadosQuadro.Safra + ")";
+			var sPathUnidadeMedidas = "/UnidadeMedidas(" + oDadosQuadro.UnidadeMedida + ")";
+
+			oDadosQuadro.ProdutoDetails = { __metadata: { uri: sPathProdutos } };
+			oDadosQuadro.SafraDetails = { __metadata: { uri: sPathSafras } };
+			oDadosQuadro.UnidadeMedidaDetails = { __metadata: { uri: sPathUnidadeMedidas } };
+			oDadosQuadro.QuadroVariedadeDetails = [];
+		
+			for ( var i = 0; i < oDadosVariedade.length; i++) {
+				
+				var iVariedadeId = oDadosVariedade[i].Variedade;
+				
+				var sPathVariedade = "/Variedades(" + iVariedadeId + ")";
+				
+				oDadosVariedade[i].VariedadeDetails = { __metadata: { uri: sPathVariedade } };
+
+				oDadosQuadro.QuadroVariedadeDetails.push(oDadosVariedade[i]);
+			}
+			debugger;
 			oModel.create("/Quadros", oDadosQuadro, {
 				success: function(){
 					sap.m.MessageBox.success("Quadro inserido com sucesso!",{
@@ -226,7 +250,7 @@ sap.ui.define([
 			} 
 		},
 		
-		_verificaLinhas: function(oDadosVariedade, soma, oDadosQuadro){
+		_verificaLinhas: function(oDadosVariedade, soma, nArea){
 			for(var i=0; i<oDadosVariedade.length; i++){
 				if(oDadosVariedade[i].Variedade === 0){
 					MessageBox.warning("Preencha uma variedade!");
@@ -237,7 +261,7 @@ sap.ui.define([
 				}
 			}
 			
-			if(soma !== oDadosQuadro.Area){
+			if(soma !== nArea){
 				MessageBox.warning("Soma das áreas não corresponde a área total!");
 				return true;
 			}
