@@ -80,7 +80,7 @@ sap.ui.define([
 			var oModel = this.getModel();
 			
 			var sPathQuadros = "/Quadros(" + iQuadroId + ")";
-			var sPathQuadroVariedades = "/QuadroVariedades"
+			var sPathQuadroVariedades = "/QuadroVariedades";
 			
 			oModel.read(sPathQuadros, {
 				success: function(oQuadro){
@@ -102,7 +102,7 @@ sap.ui.define([
 					oQuadroVariedadeModel.setData(oData.results);
 				}
 				
-			})
+			});
 			
 			this.getView().setModel(oCompareModel, "compare"); 
 			this.getView().setModel(oQuadroModel, "quadro");

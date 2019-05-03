@@ -173,7 +173,7 @@ sap.ui.define([
 
 				oDadosQuadro.QuadroVariedadeDetails.push(oDadosVariedade[i]);
 			}
-			debugger;
+
 			oModel.create("/Quadros", oDadosQuadro, {
 				success: function(){
 					sap.m.MessageBox.success("Quadro inserido com sucesso!",{

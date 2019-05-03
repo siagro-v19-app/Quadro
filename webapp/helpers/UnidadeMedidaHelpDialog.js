@@ -10,7 +10,7 @@ sap.ui.define([
 			this._oView = oView;
 			this._inputId = sInputId;
 			
-			oController.getOwnerComponent().getModel().refresh(true); 
+			oController.getOwnerComponent().getModel().refresh(true);
 			
 			var sFrag = "br.com.idxtecQuadro.helpers.UnidadeMedidaHelpDialog"; 
 			if (!this._valueHelpDialog) {
@@ -21,7 +21,7 @@ sap.ui.define([
 			this._valueHelpDialog.open();
 		},
 		
-		_handleProdutoValueHelpSearch : function (evt) {
+		_handleValueHelpSearch : function (evt) {
 			var sValue = evt.getParameter("value");
 			var aFilters = [];
 			var oFilter1 = new sap.ui.model.Filter( "Descricao", sap.ui.model.FilterOperator.Contains, sValue);
@@ -30,11 +30,14 @@ sap.ui.define([
 			evt.getSource().getBinding("items").filter(aFilters);
 		},
 		
-		_handleProdutoValueHelpClose : function (evt) {
+		
+		_handleValueHelpClose : function (evt) {
 			var oSelectedItem = evt.getParameter("selectedItem");
 			if (oSelectedItem) {
 				var oInput = sap.ui.getCore().byId(this._inputId); 
-				var sId = oSelectedItem.getDescription();
+				var oCells = oSelectedItem.getCells();
+				
+				var sId = oCells[0].getNumber();
 
 				oInput.setSelectedKey(sId);
 			}
@@ -42,5 +45,7 @@ sap.ui.define([
 			
 			this._valueHelpDialog = undefined;
 		}
+		
 	};
+	
 });
